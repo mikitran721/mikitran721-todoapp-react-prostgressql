@@ -5,4 +5,9 @@
 - them script `"server":"node ./server/server.js"`
 - them script `"client":"cd client && npm start"`
 
+## server
+
+- cai dat `npm i express cors bcrypt jsonwebtoken uuid dotenv nodemon`
+- cai PG `npm i pg`
+
 # NOI DUNG
