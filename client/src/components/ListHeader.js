@@ -1,5 +1,6 @@
 import React from "react";
 import { GiIsland } from "react-icons/gi";
+import Modal from "./Modal";
 
 const ListHeader = ({ listName }) => {
   const signOut = () => {
@@ -17,6 +18,7 @@ const ListHeader = ({ listName }) => {
           SIGN OUT
         </button>
       </div>
+      <Modal mode={"create"} />
     </div>
   );
 };

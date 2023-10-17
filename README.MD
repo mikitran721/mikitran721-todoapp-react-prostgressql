@@ -13,3 +13,4 @@
 # NOI DUNG
 
 - buil list todos;
+- buil Modal: dung de insert, update Todo item;
