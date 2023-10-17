@@ -14,3 +14,4 @@
 
 - buil list todos;
 - buil Modal: dung de insert, update Todo item;
+- ap dung modal voi `ListItem`
