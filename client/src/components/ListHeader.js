@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { GiIsland } from "react-icons/gi";
 import Modal from "./Modal";
 
-const ListHeader = ({ listName }) => {
+const ListHeader = ({ listName, getData }) => {
   const [showModal, setShowModal] = useState(false);
   const signOut = () => {
     console.log("Sign out");
@@ -21,7 +21,9 @@ const ListHeader = ({ listName }) => {
           SIGN OUT
         </button>
       </div>
-      {showModal && <Modal mode={"create"} setShowModal={setShowModal} />}
+      {showModal && (
+        <Modal mode={"create"} setShowModal={setShowModal} getData={getData} />
+      )}
     </div>
   );
 };

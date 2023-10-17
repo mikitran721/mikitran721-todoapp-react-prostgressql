@@ -1,14 +1,32 @@
 import React, { useState } from "react";
 
-const Modal = ({ mode, setShowModal, task }) => {
+const Modal = ({ mode, setShowModal, getData, task }) => {
   const editMode = mode === "edit" ? true : false;
 
   const [data, setData] = useState({
-    user_email: editMode ? task.user_email : null,
+    user_email: editMode ? task.user_email : "test1@gmail.com",
     title: editMode ? task.title : "",
     progress: editMode ? task.progress : 50,
     date: editMode ? "" : new Date(),
   });
+
+  const postData = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:8800/todos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (response.status === 200) {
+        console.log("worked");
+        setShowModal(false);
+        getData(); //reset Data of form
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   // function handleChange
   const handleChange = (e) => {
@@ -17,7 +35,6 @@ const Modal = ({ mode, setShowModal, task }) => {
       ...data,
       [name]: value,
     }));
-    console.log(data);
   };
 
   return (
@@ -49,7 +66,12 @@ const Modal = ({ mode, setShowModal, task }) => {
             value={data.progress}
             onChange={handleChange}
           />
-          <input className={mode} type="submit" value="Submit" />
+          <input
+            className={mode}
+            type="submit"
+            value="Submit"
+            onClick={editMode ? "" : postData}
+          />
         </form>
       </div>
     </div>
