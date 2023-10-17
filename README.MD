@@ -11,3 +11,5 @@
 - cai PG `npm i pg`
 
 # NOI DUNG
+
+- buil list todos;
