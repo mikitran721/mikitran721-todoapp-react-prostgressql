@@ -55,4 +55,15 @@ app.put("/todos/:id", async (req, res) => {
   }
 });
 
+// delete a todo
+app.delete("/todos/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deletedTodo = await pool.query(`DELETE FROM todos WHERE id=$1`, [id]);
+    res.json(deletedTodo);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 app.listen(PORT, () => console.log(`Server running on PORT: ${PORT}`));

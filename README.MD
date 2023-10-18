@@ -16,3 +16,4 @@
 - buil Modal: dung de insert, update Todo item;
 - ap dung modal voi `ListItem`
 - tuong tac api de create,update Todo.
+- Delete todo

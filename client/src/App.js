@@ -5,10 +5,14 @@ import ListItem from "./components/ListItem";
 const App = () => {
   const userEmail = "test1@gmail.com";
   const [tasks, setTasks] = useState(null);
+  const url = process.env.REACT_SERVER_URL;
+  console.log(url);
 
   const getData = async () => {
     try {
-      const response = await fetch(`http://localhost:8800/todos/${userEmail}`);
+      const response = await fetch(
+        `${process.env.REACT_SERVER_URL}/todos/${userEmail}`
+      );
       const json = await response.json();
       setTasks(json);
     } catch (error) {
