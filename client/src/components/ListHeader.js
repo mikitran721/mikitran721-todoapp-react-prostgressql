@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { GiIsland } from "react-icons/gi";
 import Modal from "./Modal";
+import { useCookies } from "react-cookie";
 
 const ListHeader = ({ listName, getData }) => {
   const [showModal, setShowModal] = useState(false);
+  const [cookies, setCookies, removeCookies] = useCookies(null);
+
   const signOut = () => {
-    console.log("Sign out");
+    removeCookies("Email");
+    removeCookies("AuthToken");
+    window.location.reload();
   };
   return (
     <div className="list-header">

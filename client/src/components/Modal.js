@@ -4,23 +4,27 @@ import { useCookies } from "react-cookie";
 const Modal = ({ mode, setShowModal, getData, task }) => {
   const [cookies, setCookies, removeCookies] = useCookies(null);
   const editMode = mode === "edit" ? true : false;
+  const dateTemp = task.date.length > 0 ? task.date : new Date();
 
   const [data, setData] = useState({
     user_email: editMode ? task.user_email : cookies.Email,
     title: editMode ? task.title : "",
     progress: editMode ? task.progress : 50,
-    date: editMode ? "" : new Date(),
+    date: editMode ? dateTemp : new Date(),
   });
 
   //create new
   const postData = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.REACT_SERVER_URL}/todos`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/todos`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
       if (response.status === 200) {
         console.log("worked");
         setShowModal(false);
@@ -36,7 +40,7 @@ const Modal = ({ mode, setShowModal, getData, task }) => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `${process.env.REACT_SERVER_URL}/${task.id}`,
+        `${process.env.REACT_APP_SERVER_URL}/todos/${task.id}`,
         {
           method: "PUT",
           headers: {
