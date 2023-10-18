@@ -2,6 +2,8 @@ const PORT = process.env.PORT ?? 8800;
 const express = require("express");
 const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const pool = require("./db");
 const cors = require("cors");
@@ -18,6 +20,7 @@ app.get("/todos/:userEmail", async (req, res) => {
     const todos = await pool.query("SELECT * FROM todos where user_email=$1", [
       userEmail,
     ]);
+
     res.json(todos.rows);
   } catch (error) {
     console.error(error);
@@ -61,6 +64,59 @@ app.delete("/todos/:id", async (req, res) => {
   try {
     const deletedTodo = await pool.query(`DELETE FROM todos WHERE id=$1`, [id]);
     res.json(deletedTodo);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+// sign up
+app.post("/signup", async (req, res) => {
+  const { email, password } = req.body;
+  // ma hoa mat khau
+  const salt = bcrypt.genSaltSync(10);
+  const hashedPassword = bcrypt.hashSync(password, salt);
+
+  try {
+    const signUp = await pool.query(
+      `INSERT INTO users(email,hashed_password) VALUES($1,$2)`,
+      [email, hashedPassword]
+    );
+
+    // tao token voi jwt
+    const token = jwt.sign({ email }, "secret", { expiresIn: "1hr" });
+
+    res.json({ email, token });
+  } catch (error) {
+    console.error(error);
+    if (error) {
+      res.json({ detail: error.detail });
+    }
+  }
+});
+
+// login
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const users = await pool.query(`SELECT * FROM users WHERE email=$1`, [
+      email,
+    ]);
+
+    if (!users.rows.length) return res.json({ detail: "User does not exist." });
+
+    const success = await bcrypt.compare(
+      password,
+      users.rows[0].hashed_password
+    );
+
+    if (success) {
+      // tao token voi jwt
+      const token = jwt.sign({ email }, "secret", { expiresIn: "1hr" });
+      res.json({ email: users.rows[0].email, token: users.rows[0] });
+    } else {
+      res.json({ detail: "Login failed." });
+    }
   } catch (error) {
     console.error(error);
   }
