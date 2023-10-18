@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import ListHeader from "./components/ListHeader";
 import ListItem from "./components/ListItem";
+import Auth from "./components/Auth";
 
 const App = () => {
   const userEmail = "test1@gmail.com";
   const [tasks, setTasks] = useState(null);
-  const url = process.env.REACT_SERVER_URL;
-  console.log(url);
+  // const url = process.env.REACT_SERVER_URL;
+  // console.log(url);
+
+  const authToken = false;
 
   const getData = async () => {
     try {
@@ -20,7 +23,11 @@ const App = () => {
     }
   };
 
-  useEffect(() => getData, []);
+  useEffect(() => {
+    if (authToken) {
+      getData();
+    }
+  }, []);
 
   // sort by date
   const sortedTasks = tasks?.sort(
@@ -29,10 +36,15 @@ const App = () => {
 
   return (
     <div className="app">
-      <ListHeader listName={"Holiday tick list"} getData={getData} />
-      {sortedTasks?.map((task) => (
-        <ListItem key={task.id} task={task} getData={getData} />
-      ))}
+      {!authToken && <Auth />}
+      {authToken && (
+        <>
+          <ListHeader listName={"Holiday tick list"} getData={getData} />
+          {sortedTasks?.map((task) => (
+            <ListItem key={task.id} task={task} getData={getData} />
+          ))}
+        </>
+      )}
     </div>
   );
 };
